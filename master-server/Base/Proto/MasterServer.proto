@@ -1,0 +1,59 @@
+syntax = "proto2";
+
+message ManagerTest {
+    required string dialogue = 1;
+}
+
+// gcode命令
+message GcodeCmd {
+    optional bytes cmdStr = 1;      // 打印指令
+}
+
+// gcode命令应答
+message GcodeCmdRes {
+    required uint32 result = 1;     // 响应结果
+    optional bytes resStr = 2;      // 结果内容
+}
+
+// 坐标参数
+message AxisPara{
+    optional int32 X = 1;
+    optional int32 Y = 2;
+    optional int32 Z = 3;
+    optional int32 E = 4;
+}
+
+// 音频播报
+message AudioNum {
+    required uint32 data = 1;
+}
+
+// 设置获取SD文件范围
+message ControlRange {
+    optional uint32 result = 1; // 结果
+    optional uint32 start = 2;  // 开始
+    optional uint32 end = 3;    // 停止
+}
+
+// 从SD的gcode文件获取注水图
+message GcodePhotoInfoRes {
+    required uint32 result = 1;         // 响应结果
+    required uint32 start_pixel = 2;    // 起始像素点
+    required uint32 end_pixel = 3;      // 结束像素点
+    required uint32 model_height = 4;   // 模型高度
+    required uint32 layer_height = 5;   // 模型层高
+    required bytes path = 6;            // 预览图路径
+}
+
+// 下位机软硬件信息
+message CurMcuVersion {
+    optional bytes software = 1;        // 软件版本
+    optional bytes hardware = 2;        // 硬件版本
+}
+
+// 下位机软硬件信息列表
+message CurMcuVersionList {
+    optional CurMcuVersion hostMcu = 1;    // 运动下位机
+    optional CurMcuVersion nozzleMcu = 2;  // 喷嘴下位机
+    optional CurMcuVersion bedMcu = 3;     // 热床下位机
+}

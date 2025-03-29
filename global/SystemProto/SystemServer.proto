@@ -1,0 +1,625 @@
+syntax = "proto2";
+
+// required string a = 1;   //必选
+// optional uint32 b = 2;   //可选
+// repeated string c = 3;   //可重复
+
+message ServerTest {
+    required string dialogue = 1;
+}
+
+// 消息通用回复
+message GeneralRes {
+    required uint32 result = 1;     // 响应结果
+}
+
+// 传输字符串
+message SendString {
+    required bytes str = 1;        // 字符串
+}
+
+// 显示屏设置打印材料偏好
+message MaterialPrefer{
+    required int32 id = 1;
+    optional bytes name = 2;
+    optional int32 hotendTemp = 3;
+    optional int32 bedTemp = 4;
+}
+
+// 打印材料偏好列表
+message MaterialPreferList {
+    repeated MaterialPrefer list = 1;
+}
+
+// 温度自动pid偏好
+message TempAutoPidPrefer{
+    required int32 id = 1;
+    optional bytes name = 2;
+    optional int32 temp = 3;
+    optional int32 time = 4;
+}
+
+// 温度自动pid偏好列表
+message TempAutoPidPreferList {
+    repeated TempAutoPidPrefer list = 1;
+}
+
+// 延时摄影偏好
+message DelayImagePrefer{
+    optional int32 sw = 1;
+    optional int32 location = 2;
+    optional int32 frame = 3;
+    optional int32 interval = 4;
+    optional int32 minTime = 5;
+}
+
+// 断电续打偏好
+message PowerLossPrefer{
+    optional int32 sw = 1;
+}
+
+// AI控制偏好
+message AiControlPrefer{
+    optional int32 sw = 1;          // 开关
+    optional int32 detection = 2;   // 故障检测
+    optional int32 pausePrint = 3;  // 故障暂停打印
+    optional int32 firstFloor = 4;  // 首层检测
+    optional int32 pastaTime = 5;   // 意面检测时间
+    optional float pastaTruth = 6;  // 意面可信度，真实值
+    optional int32 dataCollect = 7; // AI数据采集
+    optional float sundriesTruth = 8;   // 异物可信度，真实值
+    optional int32 flowDetect = 9;  // 流量检测
+    optional int32 optimalHeight = 10;  // AI检测，摄像头最佳高度（mm）
+    optional int32 aiMode = 11;     // AI模式，不同模式可能涉及不同检测时间、不同置信度
+}
+
+// WiFi信息
+message WifiInfo {
+    optional bytes bssid = 1;       // bssid
+    optional bytes frequer = 2;     // 工作频率
+    optional bytes signal = 3;      // 信号强度
+    optional bytes flags = 4;       // 标志位
+    optional bytes ssid = 5;        // ssid
+    optional uint32 wifiUsage = 6;  // WiFi是否保存
+    optional uint32 encrypt = 7;    // 是否加密
+}
+
+// 获取WiFi信息
+message NetworksInfo {
+    optional uint32 status = 1;     // 热点状态
+    optional bytes ip = 2;          // ip地址
+    optional bytes ssid = 3;        // 名称
+    optional bytes pass = 4;        // 密码
+    optional int32 signal = 5;      // 信号强度
+    repeated WifiInfo list = 6;     // 扫描热点列表
+}
+
+// 系统配置信息
+message SystemConfigProto {
+    optional bytes sys_version = 1;         // 系统版本
+    optional bytes fw_version = 2;          // 固件版本
+    optional bytes hw_version = 3;          // 硬件版本
+    optional bytes hw1_version = 4;         // 下位机硬件版本
+    optional bytes website = 5;             // 官方网址
+    optional int32 model = 6;               // 设备型号
+    optional bytes model_str = 7;           // 型号字符
+    optional int32 bed_length = 8;          // 热床长度
+    optional int32 bed_width = 9;           // 热床宽度
+    optional int32 bed_hight = 10;          // 热床高度
+    optional int32 swap_way = 11;           // 通信数据交换方式
+    optional int32 customer = 12;           // 客户ID
+    optional int32 language = 13;           // 语言类型
+    optional int32 sound_size = 14;         // 音量大小
+    optional int32 sound_sw = 15;           // 音频开关
+    optional int32 light_sw = 16;           // 灯光开关
+    optional int32 wifi_sw = 17;            // wifi开关
+    optional int32 theme_mode = 18;         // 主题模式
+    optional int32 self_test_sw = 19;       // 开机自检开关
+    optional int32 screensaver = 20;        // 屏保开启时间
+    optional int32 screen_value = 21;       // 屏幕亮度值
+    optional int32 auto_power_off = 22;     // 自动关机
+    optional int32 ui_direction = 23;       // 横竖屏方向
+    optional bytes device_sn = 24;          // 设备SN
+    optional bytes device_mac = 25;         // 设备MAC
+    optional uint32 total_time = 26;        // 累计使用总时间
+    optional int32 deploy_setting = 28;     // 部署设置
+    optional int32 sounde_ffect = 29;       // 音效设置
+    optional int32 full_screen = 30;        // 全屏模式
+    optional int32 light_value = 31;        // 灯光亮度
+    optional int32 z_direction = 32;        // Z轴方向
+    optional int32 enableselftest = 33;     // 打印前检测开关
+    optional bytes time_zone = 34;          // 时区设置
+    optional int32 server_config = 35;      // 服务器配置 {1：正式，2：预发布，3：测试，4：联调}
+    optional int32 upgrade_remind = 36;     // 升级提醒
+    optional int32 server_local = 37;       // 服务器位置 {1：国内，2：海外}
+    optional int32 agree_privacy = 38;      // 同意隐私协议
+    optional int32 creality_num = 39;       // 权限标志
+    optional bytes host_name = 40;          // 主机名称
+    optional int32 data_collect = 41;       // 用户数据采集
+}
+
+// 轴位置信息
+message AxisPositionInfo {
+    required int32 x = 1;                   // x轴
+    required int32 y = 2;                   // y轴
+    required int32 z = 3;                   // z轴
+    required int32 e = 4;                   // e轴
+}
+
+// PID信息
+message PidInfo {
+    required int32 p = 1;                   // p值
+    required int32 i = 2;                   // i值
+    required int32 d = 3;                   // d值
+}
+
+// 多喷嘴
+message Extruder {
+    optional int32 extruder = 1;            // 喷嘴
+}
+
+// 多热床
+message HeaterBed {
+    optional int32 heater_bed = 1;          // 热床
+    optional int32 heater_bed_0 = 2;        // 
+    optional int32 heater_bed_1 = 3;        // 
+    optional int32 heater_bed_2 = 4;        // 
+}
+
+// 多风扇
+message MultiFan {
+    optional int32 multi_fan_model = 1;     // 风扇
+    optional int32 multi_fan_case = 2;      // 
+    optional int32 multi_fan_auxiliary = 3; // 
+}
+
+// 多个Gsensor
+message MultiGsensor {
+    optional bool multi_gsensor_all = 1;    // Gsensor
+    optional bool multi_gsensor_x = 2;      //
+    optional bool multi_gsensor_y = 3;      // 
+}
+
+// 当前打印任务信息
+message PrintWorkInfo {
+    required int32 id = 1;              // 打印任务ID
+    required bytes fileName = 2;        // 打印文件名称
+    required int32 size = 3;            // 文件大小
+    required int32 cTime = 4;           // 创建时间
+    required int32 startTime = 5;       // 打印开始时间
+    required int32 totalTime = 6;       // 预计使用时间
+    required uint32 consumables = 7;    // 预计耗材
+    required int32 startWay = 8;        // 启动打印方式（UI、APP、...）
+    required bytes thumbnail = 9;       // 缩略图路径
+    required bytes photo = 10;          // 注水图路径
+    required uint32 startPixel = 11;    // 注水图起始像素点
+    required uint32 endPixel = 12;      // 注水图结束像素点
+    required uint32 modelHeight = 13;   // 注水图模型高度
+    required uint32 layerHeight = 14;   // 注水图模型层高
+    required bytes software = 15;       // 切片软件
+}
+
+// 打印机保存参数
+message PrintSavePara {
+    required int32 powerLoss = 1;                   // 断电续打开关
+    required int32 materialDetect = 2;              // 断料检测
+    required PidInfo hotendPid = 3;                 // 喷嘴温度PID
+    required PidInfo bedPid = 4;                    // 热床温度PID
+    repeated int32 levelValue = 5;                  // 自动调平值
+    required AxisPositionInfo homeOffset = 6;       // 原点偏移
+    required AxisPositionInfo axisRecoup = 7;       // 轴补偿值
+    required AxisPositionInfo stepValue = 8;        // 步进值
+    required AxisPositionInfo Acceleration = 9;     // 最大加速度
+    required AxisPositionInfo Speed = 10;           // 最大速度
+    required AxisPositionInfo Jerk = 11;            // 最大抖动速度
+    required AxisPositionInfo levelPoint = 12;      // 自动调平点数
+    repeated bytes gcodeMacro = 13;                 // gcode宏定义
+    required uint32 k_Speed = 14;                   // 高速最大速度
+    required uint32 k_Acceleration = 15;            // 高速最大加速度
+    required uint32 k_Corner = 16;                  // 高速最大拐角速度
+    required uint32 k_Jerk = 17;                    // 高速最大加速到减速的加速度限制
+    required uint32 pressureAdvance = 18;           // 高速压力推进
+    required uint32 SmoothTime = 19;                // 高速平滑时间
+    required uint32 fanFeedback = 20;               // 风扇反馈
+    required uint32 nozzleHwMaxTemp = 21;           // 喷嘴硬件最大温度
+    required uint32 bedHwMaxTemp = 22;              // 热床硬件最大温度
+    required AxisPositionInfo devMaxSize = 23;      // 设备最大尺寸
+    required AxisPositionInfo devMinSize = 24;      // 设备最小尺寸
+    required bytes bedMeshInfo = 25;                // 热床调平信息
+}
+
+// 同步打印机状态到网络或其他人机交互服务
+message SyncPrintState {
+    required int32 serialPort = 1;          // 串口连接成功标志
+    required int32 sdCardExists = 2;        // 串口连接成功标志
+    required int32 workMode = 3;            // 工作模式
+    required int32 workState = 4;           // 工作状态
+    repeated int32 fanState = 5;            // 风扇状态
+    required int32 lightState = 6;          // 灯光状态
+    required int32 wifiState = 7;           // wifi状态
+    required int32 printSpeed = 8;          // 打印速度
+    required int32 curPrintLayer = 9;       // 打印层数
+    required int32 printProgress = 10;      // 打印进度
+    repeated int32 curHotendTemp = 11;      // 当前喷嘴温度
+    repeated int32 curBedTemp = 12;         // 当前热床温度
+    repeated int32 targetHotendTemp = 13;   // 喷嘴目标温度
+    repeated int32 targetBedTemp = 14;      // 热床目标温度
+    required int32 printUsageTime = 15;     // 打印使用时间
+    required int32 printRemainTime = 16;    // 打印剩余时间
+    required int32 autoLevelProgress = 17;  // 自动调平进度
+    required int32 autoPidProgress = 18;    // 自动PID进度
+    required int32 crTouchState = 19;       // 调平模块状态 
+    required int32 pauseStatus = 20;        // 暂停状态
+    repeated int32 materialStatus = 21;     // 断料检测状态
+    required UpdataErrorInfo faultCode = 22;// 异常错误码
+    required int32 motorState = 23;         // 电机状态
+    required int32 existOffContinue = 24;   // 是否存在断电续打
+    required AxisPositionInfo livePosition = 25; // 喷嘴当前位置
+    required int32 printFlow = 26;          // 打印流量
+    required AxisPositionInfo homedAxes = 27; // 轴归位状态
+    required int32 klipperStata = 28;       // klipper状态
+    required int32 filamentUsed = 29;       // 打印使用耗材
+    required int32 printTotalLayer = 30;    // 打印总层数
+    required AxisPositionInfo gcodePosition = 31; // 喷嘴目标位置
+    repeated int32 udiskMount = 32;         // U盘挂载状态
+    required int32 ethernetExists = 33;     // 以太网状态
+    repeated int32 cameraOnline = 34;       // 摄像头状态
+    repeated int32 otherCurTemp = 35;       // 其他当前温度
+    repeated int32 curHotendPower = 36;     // 当前喷嘴功率
+    repeated int32 curBedPower = 37;        // 当前热床功率
+    required int32 realTimeSpeed = 38;      // 打印实时速度
+    required int32 realTimeFlow = 39;       // 打印实时流量
+    required int32 klipperPrint = 40;       // klipper打印状态
+    required bytes sdPath = 41;             // 虚拟SD卡路径
+    required bytes uDiskPath = 42;          // U盘路径
+    required int32 qmodeFlag = 43;          // 静音模式
+    required int32 withSelfTest = 44;       // 打印前校准步骤
+    required int32 loadMaterial = 45;       // 进料状态
+    required int32 quitMaterial = 46;       // 退料状态
+    repeated int32 fanSpeed = 47;           // 风扇速度
+    repeated int32 fanPercentage = 48;      // 风扇百分比
+    required int32 laserExists = 49;        // 激光模组状态
+    required int32 nozzleTempWait = 50;     // 喷嘴加热等待
+    required int32 bedTempWait = 51;        // 热床加热等待
+    required int32 deviceState = 52;        // 设备状态
+    required int32 scannerExists = 53;      // 扫码枪状态
+    required int32 cxyMqttState = 54;       // 创想云MQTT状态
+    required int32 logProgress = 55;        // 日志导出、上传进度
+    required int32 scanFileProgress = 56;   // 扫描文件进度
+}
+
+// 网络控制打印机
+message AppControlPrint {
+    optional int32 result = 1;              // 控制执行结果
+    optional bytes print = 2;               // 开启云打印
+    optional int32 pause = 3;               // 打印控制（暂停、恢复）
+    optional int32 stop = 4;                // 打印控制（停止）
+    optional Extruder nozzleTemp = 5;       // 设置喷嘴目标温度
+    optional HeaterBed bedTemp = 6;         // 设置热床目标温度
+    optional MultiFan fan = 7;              // 风扇控制
+    optional int32 powerLoss = 8;           // 断电续打控制
+    optional int32 autohome = 9;            // 控制回原点
+    optional bytes opGcodeFile = 10;        // 本地打印 
+    optional bytes setPosition = 11;        // 轴移动（X\Y\Z\E）
+    optional bytes setFeedratePct = 12;     // 设置打印倍速
+    optional bytes setFlowratePct = 13;     // 设置流量倍速
+    optional bytes gcodeCmd = 14;           // 执行gcode宏定义
+    optional int32 videoElapse = 15;        // 延时摄影开关
+    optional int32 nozzleMoveSnapshot = 16; // 延时摄影移开喷嘴
+    optional int32 powerLossSwitch = 17;    // 断电续打参数
+    optional AiControlPrefer aiPre = 18;    // AI控制参数
+    optional int32 lightSw = 19;            // 灯开关控制
+    optional int32 chatteringOpt = 20;      // 谐振补偿
+    optional int32 autoLeveling = 21;       // 自动调平
+    optional int32 withSelfTest = 22;       // 打印前检测
+    optional int32 enableSelfTest = 23;     // 打印前检测开关
+    optional LoadQuitMaterial loadMaterial = 26;   // 进料
+    optional LoadQuitMaterial quitMaterial = 27;   // 退料
+    optional int32 speedMode = 28;          // 打印速度模式
+    optional int32 clearFaultCode = 29;     // 清除错误码
+    optional MutableTypeData excludeObject = 30;// 设置对象排除
+}
+
+// 获取gcode文件列表
+message GetGcodeFIleList {
+    optional bytes path = 1;            // 指定查找路径
+    optional uint32 sort = 2;           // 文件排序方式
+    optional uint32 type = 3;           // 列表类型：0 本地 1 U盘
+}
+
+// 本地gcode文件信息
+message LocalGcodeInfo {
+    optional uint32 result = 1;         // 响应结果
+    optional uint32 sum = 2;            // 文件总数
+    optional bytes cachePath = 3;       // 信息缓存路径
+    optional uint32 optStart = 4;       // 获取指定范围文件开始ID
+    optional uint32 optEnd = 5;         // 获取指定范围文件结束ID
+    optional uint32 optFileId = 6;      // 选中文件ID
+    optional bytes photoPath = 7;       // 注水图路径
+    optional uint32 startPixel = 8;     // 起始像素点
+    optional uint32 endPixel = 9;       // 结束像素点
+    optional uint32 modelHeight = 10;   // 模型高度
+    optional uint32 layerHeight = 11;   // 模型层高
+}
+
+// 系统设置参数
+message SystemSetting {
+    optional int32 autoOff = 1;             // 自动关机
+    optional int32 selfTest = 2;            // 开机自检
+    optional int32 soundSw = 3;             // 音频开关
+    optional int32 screensaver = 4;         // 屏保开关
+    optional int32 themeMode = 5;           // 主题选择
+    optional int32 language = 6;            // 语言设置
+    optional int32 screenValue = 7;         // 屏幕亮度
+    optional int32 uiDirection = 8;         // 横竖屏方向
+    optional int32 soundSize = 9;           // 音量大小
+    optional int32 soundEffect = 10;        // 按键音效
+    optional int32 fullScreen = 11;         // 全屏模式
+    optional int32 lightSw = 12;            // 灯光开关
+    optional int32 lightValue = 13;         // 灯光亮度
+    optional bytes timeZone = 14;           // 系统时区
+    optional int32 serverConfig = 15;       // 服务器配置 {1：正式，2：预发布，3：测试，4：联调}
+    optional int32 upgradeRemind = 16;      // 升级提醒
+    optional int32 serverLocal = 17;        // 服务器位置 {1：国内，2：海外}
+    optional int32 agreePrivacy = 18;       // 同意隐私协议
+    optional bytes hostName = 19;           // 主机名称
+    optional int32 dataCollect = 20;        // 用户数据采集
+}
+
+// 进退料参数
+message LoadQuitMaterial {
+    optional int32 targetTemp = 1;          // 目标温度
+    optional int32 length = 2;              // 进退料长度
+    optional int32 readyLength = 3;         // 准备长度
+    optional int32 speed = 4;               // 进退料速度
+}
+
+// 显示控制打印机
+message DisControlPrint {
+    optional int32 result = 1;              // 控制执行结果
+    optional Extruder nozzleTemp = 2;       // 设置喷嘴目标温度
+    optional HeaterBed bedTemp = 3;         // 设置热床目标温度
+    optional bytes speedMultiple = 4;       // 设置打印倍速
+    optional bytes axisRecoup = 5;          // 设置轴补偿
+    optional MutableTypeData print = 6;     // 打印gcode文件，文件名
+    optional int32 printCtr = 7;            // 打印控制（暂停、恢复、停止）
+    optional bytes returnHome = 8;          // 控制回原点
+    optional bytes axisMove = 9;            // 轴移动（X\Y\Z\E）
+    optional int32 motorLock = 10;          // 电机锁定、解锁
+    optional MultiFan fanControl = 11;      // 风扇控制
+    optional bytes materialDelect = 12;     // 断料检测
+    optional bytes powerLossSw = 13;        // 断电续打
+    optional bytes stepValue = 14;          // 设置传动比
+    optional bytes acceleration = 15;       // 设置最大加速度
+    optional bytes maxJerk = 16;            // 设置最大加速到减速的加速度限制
+    optional bytes maxSpeed = 17;           // 设置最大速度
+    optional bytes hotendPid = 18;          // 设置喷嘴温度PID
+    optional bytes bedPid = 19;             // 设置热床温度PID
+    optional bytes axisOffset = 20;         // 设置轴偏移
+    optional bytes manualLevel = 21;        // 手动调平
+    optional int32 autoLevel = 22;          // 自动调平
+    optional bytes autoLevelPoints = 23;    // 自动调平点数设置
+    optional bytes setCrTouch = 24;         // 设置CR touch
+    optional int32 savePara = 25;           // 设置保存参数到（EEPROM）
+    optional int32 insertFilament = 26;     // 更换耗材
+    optional bytes flowMultiple = 27;       // 设置流量倍速
+    optional bytes gcodeMacro = 28;         // 执行gcode宏定义
+    optional bytes consoleCtl = 29;         // 终端控制
+    optional bytes restartKlipper = 30;     // 重启klipper
+    optional bytes firmwareRestart = 31;    // 重启klipper下位机
+    optional bytes resonanceTest = 32;      // 共振补偿测试
+    optional bytes stopAllHeating = 33;     // 停止所有加热
+    optional bytes maxCorner = 34;          // 设置最大拐角速度
+    optional bytes pressureAdvance = 35;    // 设置压力推进
+    optional bytes smoothTime = 36;         // 设置平滑时间
+    optional MutableTypeData excludeObject = 37;// 设置对象排除
+    optional MutableTypeData bedMeshInfo = 38;// 设置热床调平数据
+
+    optional int32 SystemReset = 50;        // 恢复出厂设置
+    optional SystemSetting SysSetting = 51; // 自动关机
+    optional UpgradeInfoList startUpgrade = 52; // 开始升级
+    optional UpgradeInfoList cancelUpgrade = 53; // 取消升级
+    optional int32 clearFaultCode = 54;     // 清除错误码
+
+    optional MaterialPrefer materialPre = 80;   // 设置材料偏好
+    optional int32 startWarmUp = 81;            // 开始预热
+    optional TempAutoPidPrefer tempPidPre = 82; // 设置自动温度PID偏好
+    optional int32 startAutoPid = 83;           // 开始自动PID
+    optional DelayImagePrefer delayImagePre = 84;// 设置延时摄影偏好
+    optional PowerLossPrefer powerLossPre = 85; // 设置断电续打偏好
+    optional AiControlPrefer aiPre = 86;        // 设置AI控制偏好
+
+    optional NetworksInfo connectWifi = 100;          // 连接wifi
+    optional NetworksInfo connectSaveWifi = 101;      // 连接已保存wifi
+    optional NetworksInfo disconnectWifi = 102;       // 断开wifi
+    optional NetworksInfo removeWifi = 103;           // 删除已保存wifi
+
+    optional int32 quietMode = 104;        // 静音模式
+    optional LoadQuitMaterial loadMaterial = 105;   // 静音模式
+    optional LoadQuitMaterial quitMaterial = 106;   // 静音模式
+
+    optional bytes uploadLocalVideo = 107;         // 上传本地视频
+    optional bytes uploadLocalLog = 108;         // 上传本地日志
+    optional int32 updateUserCxyInfo = 109;      // 获取用户创想云信息
+    optional int32 laserCalibration = 110;          // 激光校准
+}
+
+// 自动PID结果
+message AutoPidResult {
+    optional PidInfo hotEnd = 1;    // 喷嘴
+    optional PidInfo hotBed = 2;    // 热床
+}
+
+// 打印机保存参数
+message ReportAutoLevelRes {
+    optional int32 num = 1;         // 调平点号
+    optional int32 pointX = 2;      // 当前点的X坐标
+    optional int32 pointY = 3;      // 当前点的Y坐标
+    optional int32 value = 4;       // 当前点的偏移值
+}
+
+// 打印机升级信息
+message UpgradeInfo {
+    optional int32 force = 1;       // 是否强制升级
+    optional bytes version = 2;     // 升级版本
+    optional bytes name = 3;        // 镜像名称
+    optional int32 size = 4;        // 镜像大小
+    optional bytes manual = 5;      // 升级说明
+    optional bytes url = 6;         // 镜像下载地址
+    optional int32 progress = 7;    // 下载进度
+    optional bytes imagePath = 8;   // 升级镜像路径（U盘升级使用）
+    optional int32 state = 9;       // 升级状态
+}
+
+// 打印机升级信息列表
+message UpgradeInfoList {
+    optional UpgradeInfo linuxOTA = 1;      // Linux OTA升级
+    optional UpgradeInfo linuxLocal = 2;    // Linux 本地升级
+    optional UpgradeInfo mcu1OTA = 3;       // mcu1 OTA升级
+    optional UpgradeInfo mcu1Local = 4;     // mcu1 本地升级
+    optional UpgradeInfo mcu2OTA = 5;       // mcu2 OTA升级
+    optional UpgradeInfo mcu2Local = 6;     // mcu2 本地升级
+    optional UpgradeInfo mcu3OTA = 7;       // mcu3 OTA升级
+    optional UpgradeInfo mcu3Local = 8;     // mcu3 本地升级
+}
+
+// 打印历史记录
+message HistoryRecord {
+    required int32 id = 1;                  // 打印任务ID
+    required bytes fileName = 2;            // 打印文件名称
+    required int32 size = 3;                // 文件大小
+    required int32 cTime = 4;               // 创建时间
+    required int32 startTime = 5;           // 打印开始时间
+    required int32 startWay = 6;            // 启动打印方式（UI、APP、...）
+    required int32 usageTime = 7;           // 累计使用时间
+    required double usageMaterial = 8;      // 累计使用耗材
+    required int32 printFinish = 9;         // 打印是否完成
+    required bytes thumbnail = 10;          // 缩略图路径
+    required bytes fileMd5 = 11;            // 打印文件MD5码
+}
+
+// 打印历史记录列表
+message HistoryRecordList {
+    repeated HistoryRecord list = 1;        // 打印历史记录
+}
+
+// 延时摄影信息
+message DelayImageInfo {
+    required bytes name = 1;            // gcode名称
+    required int32 id = 2;              // ID
+    required bytes video = 3;           // 视频路径
+    required int32 size = 4;            // 大小
+    required int32 duration = 5;        // 时长
+    required bytes cover = 6;           // 封面
+    required int32 startTime = 7;       // 开始时间
+    required int32 printTime = 8;       // 打印时间
+    required int32 location = 9;        // 喷嘴位置
+    required int32 interval = 10;       // 间隔层数
+    required int32 render = 11;         // 渲染帧数
+}
+
+// 延时摄影信息列表
+message DelayImageInfoList {
+    repeated DelayImageInfo list = 1;       // 延时摄影信息
+}
+
+// 定义可变类型数据
+message MutableTypeData {
+    optional bool bool_v = 1;
+    optional int32 int_v = 2;
+    optional double double_v = 3;
+    optional bytes bytes_v= 4;
+}
+
+// 错误状态消息体
+message UpdataErrorInfo {
+    required int32 code = 1;                // 错误码
+    required int32 error = 2;               // 交互提示 
+    required bytes msg = 3;                 // 错误消息
+    required bytes values = 4;              // 错误参数
+}
+
+// 多热床控制
+message MultipleBedTemp{
+    optional int32 bedTemp0 = 1;
+    optional int32 bedTemp1 = 2;
+    optional int32 bedTemp2 = 3;
+}
+
+// WEB控制打印机
+message WebControlPrint {
+    optional int32 result = 1;                              // 控制执行结果
+    optional bytes print = 2;                               // 开启云打印
+    optional int32 pause = 3;                               // 打印控制（暂停、恢复）
+    optional int32 stop = 4;                                // 打印控制（停止）
+    optional Extruder nozzleTemp = 5;                       // 设置喷嘴目标温度
+    optional HeaterBed bedTemp = 6;                         // 设置热床目标温度
+    optional MultiFan fan = 7;                              // 风扇控制
+    optional int32 offContinue = 8;                         // 断电续打控制
+    optional bytes autohome = 9;                            // 控制回原点
+    optional bytes opGcodeFile = 10;                        // 本地打印 
+    optional bytes setPosition = 11;                        // 轴移动（X\Y\Z\E）
+    optional bytes setFeedratePct = 12;                     // 设置打印倍速
+    optional bytes setFlowratePct = 13;                     // 设置流量倍速
+    optional bytes gcodeCmd = 14;                           // 执行gcode宏定义
+    optional bytes axisrecoup = 15;                        // 设置轴补偿
+    optional int32 motorLock = 16;                          // 电机关闭控制
+    optional int32 heatersOff = 17;                         // 一键冷却
+    optional bytes velocitylimits = 18;                     // 速度限制
+    optional bytes accelerationlimits = 19;                 // 加速度限制
+    optional bytes delete = 20;                             // 删除文件
+    optional bytes reName = 21;                             // 重命名文件
+    optional int32 videoElapse = 22;                        // 延时摄影开关
+    optional int32 nozzleMoveSnapshot = 23;                 // 延时摄影移开喷嘴
+    optional int32 videoElapseFrame = 24;                   // 延时摄影帧数
+    optional int32 videoElapseInterval = 25;                // 延时摄影拍摄间隔
+    optional bytes materialDetect = 26;                     // 断料检测
+    optional int32 powerLossSw = 27;                        // 断电续打
+    optional bytes cornerVelocityLimits = 28;               // 拐角速度限制
+    optional bytes accelToDecelLimits = 29;                 // 加速到减速的加速度限制
+    optional bytes pressureAdvance =30;                     // 压力推进设置
+    optional bytes smoothTime =31;                          // 平滑时间设置
+    optional int32 bedTempAutoPid = 32;                     // 设置热床温度PID偏好
+    optional int32 nozzleTempAutoPid = 33;                  // 设置喷嘴温度PID偏好
+    optional int32 startAutoPid = 34;                       // 开始自动PID
+    optional bytes resonanceTest = 35;                      // 谐振补偿测试
+    optional bytes manualLevel = 36;                        // 手动调平
+    optional int32 autoLevel = 37;                          // 自动调平
+    optional int32 restartKlipper = 38;                     // 重启klipper
+    optional int32 restartFirmware = 39;                    // 重启下位机
+    optional int32 restartSystem = 40;                      // 重启系统
+    optional int32 resetSystem = 41;                        // 恢复出厂设置
+    optional UpgradeInfoList upgrade = 42;                  // 升级
+    optional int32 lightSw = 43;                            // 灯开关控制
+    optional int32 savePara = 44;                           // 设置保存参数到（EEPROM）
+    optional AiControlPrefer aiPre = 45;                    // AI控制参数
+    optional int32 clearFaultCode = 46;                     // 清除错误码
+    optional int32 enableSelfTest = 47;                     // 打印前检测开关
+    optional MutableTypeData excludeObject = 48;            // 设置对象排除
+}
+
+message FileControl {
+    optional int32 cmd = 1;  // 1、添加printid。 2、重命名。3、刪除。4、修改上传状态。
+    optional bytes file = 2; // 文件
+    optional bytes printid = 3; //打印id
+    optional bytes param1 = 4;  // other param
+    optional bytes param2 = 5;
+}
+
+// 下载gcode状态信息
+message DownloadGcode {
+    optional int32 state = 1;       // 下载状态
+    optional int32 progress = 2;    // 下载进度
+}
+
+// 升级重启状态同步
+message UpgradeRebootSync {
+    required int32 state = 1;       // 升级状态
+    required bytes oldVersion = 2;  // 旧版本号
+}
+
+// 导出日志状态
+message ExportLogState {
+    required int32 state = 1;       // 导出状态
+    required int32 progress = 2;    // 导出进度
+}
